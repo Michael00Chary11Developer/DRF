@@ -11,3 +11,4 @@
 # pip install django-filter
 # go to install app add => 'rest_framework'
 # go to urls path('api-auth/', include('rest_framework.urls'))
+# for creating new port => python manage.py runserver 8001
