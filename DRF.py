@@ -6,3 +6,8 @@
 # python manage.py createsuperuser
 # python manage.py makemigrations
 # python manage.py migrate
+# pip install djangorestframework
+# pip install markdown
+# pip install django-filter
+# go to install app add => 'rest_framework'
+# go to urls path('api-auth/', include('rest_framework.urls'))

@@ -3,11 +3,4 @@ from django.db import models
 # Create your models here.
 
 
-class Todo(models.Model):
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-    priority = models.IntegerField()
-    is_valid = models.BooleanField()
 
-    class Meta:
-        db_table = "todos"
