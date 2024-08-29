@@ -34,8 +34,8 @@ from django.contrib.auth import get_user_model
 from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-
-
+from rest_framework.authentication import TokenAuthentication
+from drf_spectacular.utils import extend_schema
 
 
 # Create your views here.
@@ -110,6 +110,11 @@ def todo_deatil_view(request: Request, todo_id: int):
 # class nase view
 
 class ListTodoView(APIView):
+    @extend_schema(
+        request=TodoSerializer,
+        responses={201: TodoSerializer},
+        description="This is about todos!"
+    )
     def get(self, request: Request):
         todos = Todo.objects.order_by('priority').all()
         todos_serialize = TodoSerializer(todos, many=True)
@@ -204,6 +209,8 @@ class TodoGenericDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Todo.objects.order_by('priority').all()
     serializer_class = TodoSerializer
     pagination_class = LimitOffsetPagination
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
 # end Generic region
 
