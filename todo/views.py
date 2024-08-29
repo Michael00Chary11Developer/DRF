@@ -31,12 +31,19 @@ from rest_framework.views import APIView
 from rest_framework import mixins, generics
 from rest_framework import viewsets
 from django.contrib.auth import get_user_model
+from rest_framework.pagination import PageNumberPagination, LimitOffsetPagination
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+
+
 
 
 # Create your views here.
 
 
 # POST And GRT
+
+# start classbaseview
 
 @api_view(['GET', 'POST'])
 def all_todos(request: Request):
@@ -83,6 +90,7 @@ def todo_deatil_view(request: Request, todo_id: int):
         #     serialize = TodoSerializer(todo)
         #     return Response(serialize.data, status.HTTP_200_OK)
 
+# end classbaseview
 
 # class ManageTodoApiView(APIView):
 #     def get(self, request: Request):
@@ -97,6 +105,9 @@ def todo_deatil_view(request: Request, todo_id: int):
 #             return Response(deserialize.data, status.HTTP_201_CREATED)
 #         else:
 #             return Response(None, status.HTTP_400_BAD_REQUEST)
+
+
+# class nase view
 
 class ListTodoView(APIView):
     def get(self, request: Request):
@@ -140,6 +151,7 @@ class DetailView(APIView):
         todo = self.get_object(todo_id=todo_id)
         todo.delete()
         return Response(None, status.HTTP_204_NO_CONTENT)
+# class nase view sonati
 
 
 # region mixins
@@ -172,21 +184,28 @@ class TodoDetailMixinApiView(mixins.RetrieveModelMixin, mixins.DestroyModelMixin
 
 # end region mixins
 
-# region generics
 
-# very very very simple Code....
+# region generics  # very very very simple Code....
+
+class TodoGenericPaginationView(PageNumberPagination):
+    page_size = 2
 
 
 class TodoGenericApiView(generics.ListCreateAPIView):
     queryset = Todo.objects.order_by('priority').all()
     serializer_class = TodoSerializer
+    pagination_class = PageNumberPagination
+    pagination_class = TodoGenericPaginationView
+    authentication_classes = [BasicAuthentication]
+    permission_classes = [IsAuthenticated]
 
 
 class TodoGenericDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Todo.objects.order_by('priority').all()
     serializer_class = TodoSerializer
+    pagination_class = LimitOffsetPagination
 
-# endregion
+# end Generic region
 
 
 # viewset region
@@ -195,7 +214,7 @@ class TodosViewSetView(viewsets.ModelViewSet):
     queryset = Todo.objects.order_by("priority").all()
     serializer_class = TodoSerializer
 
-# rend viewset region
+# end viewset region
 
 
 # region users
